@@ -19,14 +19,15 @@ public class PlayerController : MonoBehaviour {
     public LayerMask whatIsGround;
 
     public bool isGrounded;
+    public bool canClimb = false;
 
     private Animator anim;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         theRB = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -60,8 +61,38 @@ public class PlayerController : MonoBehaviour {
             transform.localScale = new Vector3(1, 1, 1);
         }
 
+        if (canClimb && Input.GetKey(KeyCode.W) && isGrounded == false) {
+            right = KeyCode.None;
+            left = KeyCode.None;
+            anim.SetBool("Climb", true);
+        }
+        else
+        {
+            right = KeyCode.D;
+            left = KeyCode.A;
+            anim.SetBool("Climb", false);
+        }
+
         anim.SetFloat("Speed", Mathf.Abs(theRB.velocity.x));
         anim.SetBool("Grounded", isGrounded);
 	}
 
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.tag == "Stairs" && isGrounded == true)
+        {
+            canClimb = true;
+            jump = KeyCode.W;
+            jumpForce = 9;
+            Time.timeScale = 0.5f;
+        }
+    }
+
+    public void OnTriggerExit2D(Collider2D other)
+    {
+       jump = KeyCode.Space;
+       jumpForce = 5;
+       Time.timeScale = 1f;
+       canClimb = false;
+    }
 }
