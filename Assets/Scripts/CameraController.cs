@@ -21,16 +21,6 @@ public class CameraController : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        DontDestroyOnLoad(transform.gameObject);
-        if (!cameraExists)
-        {
-            cameraExists = true;
-            DontDestroyOnLoad(transform.gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
         theCamera = GetComponent<Camera>();
         halfHeight = theCamera.orthographicSize;
         halfWidth = halfHeight * Screen.width / Screen.height;

@@ -66,12 +66,6 @@ public class PlayerController : MonoBehaviour {
             left = KeyCode.None;
             anim.SetBool("Climb", true);
         }
-        else
-        {
-            right = KeyCode.D;
-            left = KeyCode.A;
-            anim.SetBool("Climb", false);
-        }
 
         anim.SetFloat("Speed", Mathf.Abs(theRB.velocity.x));
         anim.SetBool("Grounded", isGrounded);
@@ -79,11 +73,19 @@ public class PlayerController : MonoBehaviour {
 
     public void OnTriggerStay2D(Collider2D other)
     {
-        if (other.tag == "Stairs" && isGrounded == true)
+        if (other.name == "Stairs" && isGrounded == true)
         {
             canClimb = true;
             jump = KeyCode.W;
-            jumpForce = 9;
+            jumpForce = 8;
+            Time.timeScale = 0.5f;
+        }
+
+        if (other.name == "Stairs (1)" && isGrounded == true)
+        {
+            canClimb = true;
+            jump = KeyCode.W;
+            jumpForce = 10;
             Time.timeScale = 0.5f;
         }
     }
@@ -94,5 +96,8 @@ public class PlayerController : MonoBehaviour {
        jumpForce = 5;
        Time.timeScale = 1f;
        canClimb = false;
+       right = KeyCode.D;
+       left = KeyCode.A;
+       anim.SetBool("Climb", false);
     }
 }

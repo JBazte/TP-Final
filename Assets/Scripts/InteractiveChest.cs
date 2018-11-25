@@ -7,6 +7,7 @@ public class InteractiveChest : MonoBehaviour {
 
     public GameObject keyCode;
     private bool active;
+    public Camera theCamera;
 
     private void Start()
     {
@@ -17,8 +18,10 @@ public class InteractiveChest : MonoBehaviour {
     {
         if (active && Input.GetKeyDown(KeyCode.E))
         {
-            Scene scene = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(scene.name);
+            theCamera = FindObjectOfType<Camera>();
+            theCamera.backgroundColor = new Color32(46, 44, 45, 0);
+            theCamera.GetComponent<CameraController>().enabled = false;
+            SceneManager.LoadScene("Win");
         }
     }
 
