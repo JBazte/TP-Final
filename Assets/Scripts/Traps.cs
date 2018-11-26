@@ -14,13 +14,14 @@ public class Traps : MonoBehaviour {
 
     private void Start()
     {
-        thePlayer = FindObjectOfType<PlayerController>();
-        playerSprite = GameObject.Find("Player").GetComponent<SpriteRenderer>();
         this.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     private void Update()
     {
+        HurtSound = GameObject.Find("HurtSound").GetComponent<AudioSource>();
+        thePlayer = FindObjectOfType<PlayerController>();
+        playerSprite = thePlayer.GetComponent<SpriteRenderer>();
         if (flashActive)
         {
             if (flashCounter > flashLength * .66f)
@@ -42,7 +43,7 @@ public class Traps : MonoBehaviour {
                 playerSprite.color = Color.white;
                 playerSprite.color = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, 1f);
                 flashActive = false;
-                StartCoroutine(Die());
+                Destroy(thePlayer.gameObject);
             }
             flashCounter -= Time.deltaTime;
         }
@@ -71,10 +72,9 @@ public class Traps : MonoBehaviour {
         }
     }
 
-    IEnumerator Die()
+    public void Reload()
     {
-        yield return new WaitForSeconds(.5f);
-        Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
+        this.GetComponent<SpriteRenderer>().enabled = false;
+        this.GetComponent<Collider2D>().enabled = true;
     }
 }
