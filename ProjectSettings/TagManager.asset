@@ -8,6 +8,7 @@ TagManager:
   - Bounds
   - Stairs
   - MainCamera0
+  - Stairs (1)
   layers:
   - Default
   - TransparentFX

@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour {
 
     public void OnTriggerStay2D(Collider2D other)
     {
-        if (other.name == "Stairs" && isGrounded == true)
+        if (other.gameObject.tag == "Stairs" && isGrounded == true)
         {
             canClimb = true;
             jump = KeyCode.W;
@@ -81,11 +81,11 @@ public class PlayerController : MonoBehaviour {
             Time.timeScale = 0.5f;
         }
 
-        if (other.name == "Stairs (1)" && isGrounded == true)
+        if (other.gameObject.tag == "Stairs (1)" && isGrounded == true)
         {
             canClimb = true;
             jump = KeyCode.W;
-            jumpForce = 10;
+            jumpForce = 9.5f;
             Time.timeScale = 0.5f;
         }
     }
