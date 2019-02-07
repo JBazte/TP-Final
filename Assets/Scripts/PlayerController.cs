@@ -6,7 +6,9 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour {
 
     public float moveSpeed;
+    public float climbSpeed;
     public float jumpForce;
+    private float inputVertical;
 
     public KeyCode left;
     public KeyCode right;
@@ -17,21 +19,23 @@ public class PlayerController : MonoBehaviour {
     public Transform groundCheckPoint;
     public float groundCheckRadius;
     public LayerMask whatIsGround;
+    public LayerMask whatIsLadder;
 
     public bool isGrounded;
-    public bool canClimb = false;
+    public float distance;
+    private bool isClimbing;
 
     private Animator anim;
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         theRB = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        
+
+    // Update is called once per frame
+    void Update() {
+
         isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, whatIsGround);
 
         if (Input.GetKey(left))
@@ -51,7 +55,7 @@ public class PlayerController : MonoBehaviour {
         {
             theRB.velocity = new Vector2(theRB.velocity.x, jumpForce);
         }
-        
+
         if (theRB.velocity.x < 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
@@ -61,43 +65,36 @@ public class PlayerController : MonoBehaviour {
             transform.localScale = new Vector3(1, 1, 1);
         }
 
-        if (canClimb && Input.GetKey(KeyCode.W) && isGrounded == false) {
-            right = KeyCode.None;
-            left = KeyCode.None;
-            anim.SetBool("Climb", true);
-        }
-
         anim.SetFloat("Speed", Mathf.Abs(theRB.velocity.x));
         anim.SetBool("Grounded", isGrounded);
-	}
-
-    public void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Stairs" && isGrounded == true)
-        {
-            canClimb = true;
-            jump = KeyCode.W;
-            jumpForce = 8;
-            Time.timeScale = 0.5f;
-        }
-
-        if (other.gameObject.tag == "Stairs (1)" && isGrounded == true)
-        {
-            canClimb = true;
-            jump = KeyCode.W;
-            jumpForce = 9.5f;
-            Time.timeScale = 0.5f;
-        }
     }
 
-    public void OnTriggerExit2D(Collider2D other)
-    {
-       jump = KeyCode.Space;
-       jumpForce = 5;
-       Time.timeScale = 1f;
-       canClimb = false;
-       right = KeyCode.D;
-       left = KeyCode.A;
-       anim.SetBool("Climb", false);
+    void FixedUpdate(){
+        RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.up, distance, whatIsLadder);
+
+        if(hitInfo.collider != null)
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                isClimbing = true;
+                anim.SetBool("Climb", true);
+            }
+        }
+        else
+        {
+            isClimbing = false;
+            anim.SetBool("Climb", false);
+        }
+
+        if (isClimbing == true)
+        {
+            inputVertical = Input.GetAxisRaw("Vertical");
+            theRB.velocity = new Vector2(theRB.velocity.x, inputVertical * climbSpeed);
+            theRB.gravityScale = 0;
+        }
+        else
+        {
+            theRB.gravityScale = 1;
+        }
     }
 }

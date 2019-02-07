@@ -6,9 +6,7 @@ TagManager:
   tags:
   - Background
   - Bounds
-  - Stairs
   - MainCamera0
-  - Stairs (1)
   layers:
   - Default
   - TransparentFX
@@ -19,7 +17,7 @@ TagManager:
   - 
   - 
   - Background
-  - 
+  - Ladder
   - 
   - 
   - 
